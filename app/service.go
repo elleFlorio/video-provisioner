@@ -13,10 +13,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/elleFlorio/testAppGru/discovery"
-	"github.com/elleFlorio/testAppGru/metric"
-	"github.com/elleFlorio/testAppGru/network"
-	"github.com/elleFlorio/testAppGru/worker"
+	"github.com/elleFlorio/video-provisioner/discovery"
+	"github.com/elleFlorio/video-provisioner/metric"
+	"github.com/elleFlorio/video-provisioner/network"
+	"github.com/elleFlorio/video-provisioner/worker"
 )
 
 type ServiceParams struct {

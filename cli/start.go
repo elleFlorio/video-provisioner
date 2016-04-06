@@ -4,10 +4,10 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/elleFlorio/testAppGru/Godeps/_workspace/src/github.com/codegangsta/cli"
+	"github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/github.com/codegangsta/cli"
 
-	"github.com/elleFlorio/testAppGru/app"
-	"github.com/elleFlorio/testAppGru/network"
+	"github.com/elleFlorio/video-provisioner/app"
+	"github.com/elleFlorio/video-provisioner/network"
 )
 
 func start(c *cli.Context) {
