@@ -1,0 +1,52 @@
+{
+	"ImportPath": "github.com/elleFlorio/testAppGru",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "1.2.0-98-g30b361b",
+			"Rev": "30b361bf66a60174a9589458afbf494478bafd00"
+		},
+		{
+			"ImportPath": "github.com/coreos/etcd/client",
+			"Comment": "v2.2.0-54-gc082488",
+			"Rev": "c082488e23781c3c19c0de7563e3c47d06c0d987"
+		},
+		{
+			"ImportPath": "github.com/coreos/etcd/pkg/pathutil",
+			"Comment": "v2.2.0-54-gc082488",
+			"Rev": "c082488e23781c3c19c0de7563e3c47d06c0d987"
+		},
+		{
+			"ImportPath": "github.com/coreos/etcd/pkg/types",
+			"Comment": "v2.2.0-54-gc082488",
+			"Rev": "c082488e23781c3c19c0de7563e3c47d06c0d987"
+		},
+		{
+			"ImportPath": "github.com/influxdb/influxdb/client/v2",
+			"Comment": "v0.9.5-rc1-197-gc7a0863",
+			"Rev": "c7a0863371ea3f893eacd55b2f81444bb2cce3ed"
+		},
+		{
+			"ImportPath": "github.com/influxdb/influxdb/models",
+			"Comment": "v0.9.5-rc1-197-gc7a0863",
+			"Rev": "c7a0863371ea3f893eacd55b2f81444bb2cce3ed"
+		},
+		{
+			"ImportPath": "github.com/influxdb/influxdb/pkg/escape",
+			"Comment": "v0.9.5-rc1-197-gc7a0863",
+			"Rev": "c7a0863371ea3f893eacd55b2f81444bb2cce3ed"
+		},
+		{
+			"ImportPath": "github.com/ugorji/go/codec",
+			"Rev": "821cda7e48749cacf7cad2c6ed01e96457ca7e9d"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "db8e4de5b2d6653f66aea53094624468caad15d2"
+		}
+	]
+}
