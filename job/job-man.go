@@ -3,9 +3,9 @@ package job
 import (
 	"log"
 	"runtime"
-	"strconv"
 	"sync"
 
+	"github.com/elleFlorio/video-provisioner/logger"
 	"github.com/elleFlorio/video-provisioner/metric"
 	"github.com/elleFlorio/video-provisioner/request"
 )
@@ -19,7 +19,7 @@ func init() {
 	jobs = make(map[string]request.Request)
 }
 
-func jobsManager(ch_req chan request.Request, destinations []string) {
+func ManageJobs(ch_req chan request.Request, destinations []string) {
 	log.Println("Started work manager. Waiting for work to do...")
 	ch_done := make(chan request.Request)
 	for {
@@ -28,7 +28,7 @@ func jobsManager(ch_req chan request.Request, destinations []string) {
 			addReqToWorks(req)
 			go Work(getLambda(), req, ch_done)
 		case reqDone := <-ch_done:
-			log.Println("gru:" + name + ":" + "execution_time:" + strconv.FormatFloat(reqDone.ExecTimeMs, 'f', 2, 64) + ":ms")
+			logger.LogExecutionTime(reqDone.ExecTimeMs)
 			request.FinalizeReq(reqDone, destinations)
 			removeReqFromWorks(reqDone.ID)
 			metric.SendExecutionTime(reqDone.ExecTimeMs)
@@ -54,7 +54,7 @@ func getLambda() float64 {
 	return 0.0
 }
 
-func isServiceWorking() bool {
+func IsServiceWorking() bool {
 	defer runtime.Gosched()
 	mutex_w.Lock()
 	jobsInProgress := len(jobs)

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/elleFlorio/testAppGru/Godeps/_workspace/src/github.com/codegangsta/cli"
+	"github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/github.com/codegangsta/cli"
 )
 
 func Run() {
@@ -46,18 +46,18 @@ func Run() {
 				},
 				cli.StringFlag{
 					Name:  "db-name, db",
-					Value: "testAppDB",
-					Usage: fmt.Sprintf("influxdb database name. Default is 'testAppDB'"),
+					Value: "video-provisioner",
+					Usage: fmt.Sprintf("influxdb database name. Default is 'video-provisioner'"),
 				},
 				cli.StringFlag{
 					Name:  "port, p",
 					Value: "",
 					Usage: fmt.Sprintf("port of the service"),
 				},
-				cli.StringFlag{
+				cli.Float64Flag{
 					Name:  "workload, w",
-					Value: "medium",
-					Usage: fmt.Sprintf("workload (options: none, low, medium, heavy). Default is 'medium'"),
+					Value: 0.0,
+					Usage: fmt.Sprintf("workload in milliseconds. Default is 0.0"),
 				},
 				cli.BoolFlag{
 					Name:  "discovery, ds",

@@ -3,7 +3,7 @@ package metric
 import (
 	"time"
 
-	"github.com/elleFlorio/testAppGru/Godeps/_workspace/src/github.com/influxdb/influxdb/client/v2"
+	"github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/github.com/influxdb/influxdb/client/v2"
 )
 
 type InfluxConfig struct {
@@ -22,12 +22,11 @@ var (
 	batch          client.BatchPoints
 )
 
-func Initialize(serviceName string, serviceWorkload string, serviceAddress string, influxConf InfluxConfig) error {
+func Initialize(serviceName string, serviceAddress string, influxConf InfluxConfig) error {
 	var err error
 	tags = map[string]string{
-		"name":     serviceName,
-		"workload": serviceWorkload,
-		"address":  serviceAddress,
+		"name":    serviceName,
+		"address": serviceAddress,
 	}
 	execFields = map[string]interface{}{
 		"value": 0.0,

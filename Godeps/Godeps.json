@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/elleFlorio/testAppGru",
+	"ImportPath": "github.com/elleFlorio/video-provisioner",
 	"GoVersion": "go1.5",
 	"Packages": [
 		"./..."

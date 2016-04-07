@@ -12,7 +12,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/elleFlorio/testAppGru/Godeps/_workspace/src/github.com/influxdb/influxdb/models"
+	"github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/github.com/influxdb/influxdb/models"
 )
 
 // UDPPayloadSize is a reasonable default payload size for UDP packets that

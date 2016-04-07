@@ -27,7 +27,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/elleFlorio/testAppGru/Godeps/_workspace/src/golang.org/x/net/context"
+	"github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/golang.org/x/net/context"
 )
 
 var (

@@ -8,7 +8,7 @@ package client
 import (
 	"errors"
 	"fmt"
-	codec1978 "github.com/elleFlorio/testAppGru/Godeps/_workspace/src/github.com/ugorji/go/codec"
+	codec1978 "github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/github.com/ugorji/go/codec"
 	"reflect"
 	"runtime"
 	"time"

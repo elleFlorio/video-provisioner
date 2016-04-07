@@ -64,6 +64,11 @@ func readAndIncrementCounter() int {
 	return c
 }
 
+func GetRequest(reqId string) (Request, bool) {
+	req, ok := requests[reqId]
+	return req, ok
+}
+
 func IsServiceWaiting() bool {
 	mutex_r.Lock()
 	requestsPending := len(requests)
@@ -113,4 +118,20 @@ func addRequestToHistory(req Request) {
 	requests[req.ID] = req
 	mutex_r.Unlock()
 	runtime.Gosched()
+}
+
+func UpdateRequestInHistory(reqId string) bool {
+	deleted := false
+	mutex_r.Lock()
+	req := requests[reqId]
+	req.Counter -= 1
+	if req.Counter <= 0 {
+		delete(requests, reqId)
+		deleted = true
+	} else {
+		requests[reqId] = req
+	}
+	mutex_r.Unlock()
+	runtime.Gosched()
+	return deleted
 }
