@@ -19,7 +19,7 @@ func init() {
 	jobs = make(map[string]request.Request)
 }
 
-func ManageJobs(ch_req chan request.Request, destinations []string) {
+func ManageJobs(ch_req chan request.Request) {
 	log.Println("Started work manager. Waiting for work to do...")
 	ch_done := make(chan request.Request)
 	for {
@@ -29,7 +29,7 @@ func ManageJobs(ch_req chan request.Request, destinations []string) {
 			go Work(getLambda(), req, ch_done)
 		case reqDone := <-ch_done:
 			logger.LogExecutionTime(reqDone.ExecTimeMs)
-			request.FinalizeReq(reqDone, destinations)
+			request.FinalizeReq(reqDone)
 			removeReqFromWorks(reqDone.ID)
 			metric.SendExecutionTime(reqDone.ExecTimeMs)
 		}

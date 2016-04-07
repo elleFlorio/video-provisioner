@@ -22,7 +22,7 @@ func init() {
 	requests = make(map[string]Request)
 }
 
-func CreateReq(r *http.Request, nDestination int) (Request, error) {
+func CreateReq(r *http.Request) (Request, error) {
 	var err error
 	var requestID string
 	var start = time.Now()
@@ -46,7 +46,7 @@ func CreateReq(r *http.Request, nDestination int) (Request, error) {
 		ID:         requestID,
 		From:       message.Sender,
 		To:         toService,
-		Counter:    nDestination,
+		Counter:    network.GetDestinationsNumber(),
 		Start:      start,
 		ExecTimeMs: 0,
 	}
@@ -81,35 +81,24 @@ func IsServiceWaiting() bool {
 	return false
 }
 
-func FinalizeReq(reqDone Request, destinations []string) {
+func FinalizeReq(reqDone Request) {
+	var err error
 	if reqDone.To != "" {
-		err := network.SendMessageToSpecificService(reqDone.ID, reqDone.To)
+		err = network.SendMessageToSpecificService(reqDone.ID, reqDone.To)
 		if err != nil {
 			log.Println("Cannot dispatch message to service", reqDone.To)
 			return
 		}
 		addRequestToHistory(reqDone)
 	} else {
-		if len(destinations) > 0 {
-			errCounter := network.SendMessageToDestinations(reqDone.ID, destinations)
-			if errCounter < len(destinations) {
-				// This is for requests to multiple destinations
-				// because I have to wait till every destination
-				// responde me before consider the request complete
-				reqCounter := len(destinations) - errCounter
-				reqDone.Counter = reqCounter
-				addRequestToHistory(reqDone)
-			}
-			if errCounter > 0 {
-				log.Println("Cannot dispatch message to all the destinations")
-				if errCounter == len(destinations) {
-					network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
-				}
-				return
-			}
-		} else {
+		err = network.SendMessageToDestinations(reqDone.ID)
+		if err != nil {
+			log.Println("Cannot dispatch message to all the destinations")
 			network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
+			return
 		}
+		addRequestToHistory(reqDone)
+		network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
 	}
 }
 

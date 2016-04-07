@@ -1,11 +1,50 @@
 package network
 
 import (
+	"errors"
 	"log"
 	"math/rand"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/elleFlorio/video-provisioner/discovery"
 )
+
+var (
+	destinations map[string]float64
+	rnd          *rand.Rand
+)
+
+func init() {
+	destinations = make(map[string]float64)
+	source := rand.NewSource(time.Now().UnixNano())
+	rnd = rand.New(source)
+}
+
+func ReadDestinations(destString []string) {
+	var prob float64
+	var err error
+
+	for _, dest := range destString {
+		destProb := strings.Split(dest, ":")
+		if len(destProb) < 2 {
+			prob = 1.0
+		} else {
+			prob, err = strconv.ParseFloat(destProb[1], 64)
+			if err != nil {
+				log.Println("Error parsing destination probability. Set to 0.0")
+				prob = 0.0
+			}
+		}
+
+		destinations[destProb[0]] = prob
+	}
+}
+
+func GetDestinationsNumber() int {
+	return len(destinations)
+}
 
 func SendMessageToSpecificService(requestID string, service string) error {
 	instances, err := discovery.GetAvailableInstances(service)
@@ -13,29 +52,45 @@ func SendMessageToSpecificService(requestID string, service string) error {
 		log.Println("Cannot dispatch message to service ", service)
 		return err
 	}
-	destination := getDestination(instances)
-	sendReqToDest(requestID, destination)
+	instance := getInstance(instances)
+	sendReqToDest(requestID, instance)
 	return nil
 }
 
-func SendMessageToDestinations(requestID string, destinations []string) int {
-	errCounter := 0
-
-	for _, service := range destinations {
-		instances, err := discovery.GetAvailableInstances(service)
-		if err != nil {
-			log.Println("Cannot dispatch message to service ", service)
-			errCounter++
-			break
-		}
-		destination := getDestination(instances)
-		sendReqToDest(requestID, destination)
+func SendMessageToDestinations(requestID string) error {
+	destination := getDestination()
+	instances, err := discovery.GetAvailableInstances(destination)
+	if err != nil {
+		log.Println("Cannot dispatch message to service ", destination)
+		return errors.New("Cannot dispatch message to service " + destination)
 	}
+	instance := getInstance(instances)
+	sendReqToDest(requestID, instance)
 
-	return errCounter
+	return nil
 }
 
-func getDestination(instances []string) string {
+func getDestination() string {
+	if len(destinations) == 1 {
+		for dest, _ := range destinations {
+			return dest
+		}
+	}
+
+	p := rnd.Float64()
+	probSum := 0.0
+	for dest, prob := range destinations {
+		probSum += prob
+		if p <= probSum {
+			return dest
+		}
+	}
+
+	log.Println("Error: unable to get a destination")
+	return ""
+}
+
+func getInstance(instances []string) string {
 	if len(instances) == 1 {
 		return instances[0]
 	}

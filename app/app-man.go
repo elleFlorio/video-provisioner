@@ -43,6 +43,7 @@ func StartService() {
 	}
 
 	setNetworkAddress()
+	initializeDestinations()
 	startSigsMonitor(ch_stop)
 	startJobsManager(ch_req)
 	initializeMetricService()
@@ -59,6 +60,10 @@ func setNetworkAddress() {
 	service.Network.Address = network.GenerateAddress(service.Network.Ip, service.Network.Port)
 }
 
+func initializeDestinations() {
+	network.ReadDestinations(service.Destinations)
+}
+
 func createLogger(name string) {
 	logger.New(name)
 }
@@ -68,7 +73,7 @@ func startSigsMonitor(ch_stop chan struct{}) {
 }
 
 func startJobsManager(ch_req chan request.Request) {
-	go job.ManageJobs(ch_req, service.Destinations)
+	go job.ManageJobs(ch_req)
 }
 
 func initializeMetricService() {
@@ -108,8 +113,7 @@ func readMessage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	// Create the request
-	nDestination := len(service.Destinations)
-	req, err := request.CreateReq(r, nDestination)
+	req, err := request.CreateReq(r)
 	if err != nil {
 		log.Println("Cannot read message")
 		w.WriteHeader(422)
