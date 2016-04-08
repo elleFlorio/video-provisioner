@@ -91,7 +91,7 @@ func FinalizeReq(reqDone Request) {
 		}
 		addRequestToHistory(reqDone)
 	} else {
-		err = network.SendMessageToDestinations(reqDone.ID)
+		err = network.SendMessageToDestination(reqDone.ID)
 		if err != nil {
 			log.Println("Cannot dispatch message to all the destinations")
 			network.RespondeToRequest(reqDone.From, reqDone.ID, "done")

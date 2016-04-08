@@ -25,6 +25,7 @@ func init() {
 func ReadDestinations(destString []string) {
 	var prob float64
 	var err error
+	probSum := 0.0
 
 	for _, dest := range destString {
 		destProb := strings.Split(dest, ":")
@@ -39,6 +40,12 @@ func ReadDestinations(destString []string) {
 		}
 
 		destinations[destProb[0]] = prob
+
+		probSum += prob
+	}
+
+	if probSum != 1.0 {
+		log.Fatalln("Error: the sum of destinations probabilities should be 1.0")
 	}
 }
 
@@ -57,7 +64,7 @@ func SendMessageToSpecificService(requestID string, service string) error {
 	return nil
 }
 
-func SendMessageToDestinations(requestID string) error {
+func SendMessageToDestination(requestID string) error {
 	destination := getDestination()
 	instances, err := discovery.GetAvailableInstances(destination)
 	if err != nil {
