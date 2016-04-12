@@ -2,8 +2,8 @@ package app
 
 type Service struct {
 	Name         string
-	Workload     float64
 	Destinations []string
+	Job          JobOpt
 	Discovery    DiscoveryOpt
 	Metrics      MetricsOpt
 	Network      NetworkOpt
@@ -25,4 +25,9 @@ type NetworkOpt struct {
 	Ip      string
 	Port    string
 	Address string
+}
+
+type JobOpt struct {
+	Lambda   float64
+	Profiles []string
 }

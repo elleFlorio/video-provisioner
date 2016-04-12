@@ -16,12 +16,17 @@ func start(c *cli.Context) {
 	}
 
 	name := c.Args().First()
-	workload := c.Float64("workload")
 	destinations := c.StringSlice("destinations")
+
+	lambda := c.Float64("lambda")
+	profiles := c.StringSlice("profiles")
+	job := app.JobOpt{
+		Lambda:   lambda,
+		Profiles: profiles,
+	}
 
 	etcdAddress := c.String("etcdserver")
 	useDiscovery := c.Bool("discovery")
-
 	discovery := app.DiscoveryOpt{
 		EtcdAddress:  etcdAddress,
 		UseDiscovery: useDiscovery,
@@ -31,7 +36,6 @@ func start(c *cli.Context) {
 	influxDB := c.String("db-name")
 	influxUser := c.String("db-user")
 	influxPwd := c.String("db-pwd")
-
 	metrics := app.MetricsOpt{
 		InfluxAddress: influxAddress,
 		InfluxDbName:  influxDB,
@@ -43,14 +47,12 @@ func start(c *cli.Context) {
 	if ip = c.String("ipaddress"); ip == "" {
 		ip = network.GetHostIp()
 	}
-
 	var port string
 	if port = c.String("port"); port == "" {
 		p := network.GetPort()
 		port = strconv.Itoa(p)
 	}
 	port = ":" + port
-
 	network := app.NetworkOpt{
 		Ip:   ip,
 		Port: port,
@@ -58,8 +60,8 @@ func start(c *cli.Context) {
 
 	service := app.Service{
 		Name:         name,
-		Workload:     workload,
 		Destinations: destinations,
+		Job:          job,
 		Discovery:    discovery,
 		Metrics:      metrics,
 		Network:      network,

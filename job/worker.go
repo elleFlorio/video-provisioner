@@ -1,7 +1,6 @@
 package job
 
 import (
-	"math/rand"
 	"time"
 
 	"github.com/elleFlorio/video-provisioner/request"
@@ -9,19 +8,8 @@ import (
 
 const c_MAXITER = 100
 
-var (
-	source rand.Source
-	gen    *rand.Rand
-)
-
-func init() {
-	source = rand.NewSource(time.Now().UnixNano())
-	gen = rand.New(source)
-}
-
-func Work(lambda float64, req request.Request, ch_done chan request.Request) {
-	load := gen.ExpFloat64() * lambda
-	timer := time.NewTimer(time.Millisecond * time.Duration(load))
+func Work(workTime float64, req request.Request, ch_done chan request.Request) {
+	timer := time.NewTimer(time.Millisecond * time.Duration(workTime))
 	for {
 		select {
 		case <-timer.C:

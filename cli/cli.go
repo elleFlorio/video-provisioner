@@ -55,9 +55,16 @@ func Run() {
 					Usage: fmt.Sprintf("port of the service"),
 				},
 				cli.Float64Flag{
-					Name:  "workload, w",
+					Name:  "lambda, l",
 					Value: 0.0,
-					Usage: fmt.Sprintf("workload in milliseconds. Default is 0.0"),
+					Usage: fmt.Sprintf("lambda in milliseconds. Lambda is used to" +
+						"compute the workload. Default is 0.0"),
+				},
+				cli.StringSliceFlag{
+					Name:  "profiles, lp",
+					Value: &cli.StringSlice{},
+					Usage: fmt.Sprintf("load profiles to compute the load. " +
+						"Each load profiles should be in the format filename:probability"),
 				},
 				cli.BoolFlag{
 					Name:  "discovery, ds",
@@ -66,8 +73,8 @@ func Run() {
 				cli.StringSliceFlag{
 					Name:  "destinations, d",
 					Value: &cli.StringSlice{},
-					Usage: fmt.Sprintf("destination of request messages. Can be used " +
-						"several times to specify multiple destinations"),
+					Usage: fmt.Sprintf("destination of request messages. " +
+						"Each destination should be in the format service:probability"),
 				},
 			},
 		},

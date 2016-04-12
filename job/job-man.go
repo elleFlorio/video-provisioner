@@ -2,31 +2,53 @@ package job
 
 import (
 	"log"
+	"math/rand"
 	"runtime"
 	"sync"
+	"time"
 
+	"github.com/elleFlorio/video-provisioner/job/load"
 	"github.com/elleFlorio/video-provisioner/logger"
 	"github.com/elleFlorio/video-provisioner/metric"
 	"github.com/elleFlorio/video-provisioner/request"
 )
 
 var (
-	jobs    map[string]request.Request
-	mutex_w = &sync.Mutex{}
+	jobs        map[string]request.Request
+	mutex_w     = &sync.Mutex{}
+	lmbd        float64
+	useProfiles = false
+	gen         *rand.Rand
 )
 
 func init() {
 	jobs = make(map[string]request.Request)
+	source := rand.NewSource(time.Now().UnixNano())
+	gen = rand.New(source)
+}
+
+func InitializeJobsManager(lambda float64, probabilities []string) {
+	lmbd = lambda
+
+	if len(probabilities) != 0 {
+		load.ReadProbabilities(probabilities)
+		profiles := load.GetProfilesNames()
+		load.ReadProfiles(profiles)
+		useProfiles = true
+	}
+
 }
 
 func ManageJobs(ch_req chan request.Request) {
 	log.Println("Started work manager. Waiting for work to do...")
 	ch_done := make(chan request.Request)
+	var workTime float64
 	for {
 		select {
 		case req := <-ch_req:
 			addReqToWorks(req)
-			go Work(getLambda(), req, ch_done)
+			workTime = getWorkTime()
+			go Work(workTime, req, ch_done)
 		case reqDone := <-ch_done:
 			logger.LogExecutionTime(reqDone.ExecTimeMs)
 			request.FinalizeReq(reqDone)
@@ -50,8 +72,12 @@ func removeReqFromWorks(id string) {
 	runtime.Gosched()
 }
 
-func getLambda() float64 {
-	return 0.0
+func getWorkTime() float64 {
+	if !useProfiles {
+		return gen.ExpFloat64() * lmbd
+	} else {
+		return load.GetLoad()
+	}
 }
 
 func IsServiceWorking() bool {

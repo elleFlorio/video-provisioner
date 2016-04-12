@@ -43,6 +43,7 @@ func StartService() {
 	}
 
 	setNetworkAddress()
+	initializeJobsManager()
 	initializeDestinations()
 	startSigsMonitor(ch_stop)
 	startJobsManager(ch_req)
@@ -58,6 +59,10 @@ func StartService() {
 
 func setNetworkAddress() {
 	service.Network.Address = network.GenerateAddress(service.Network.Ip, service.Network.Port)
+}
+
+func initializeJobsManager() {
+	job.InitializeJobsManager(service.Job.Lambda, service.Job.Profiles)
 }
 
 func initializeDestinations() {
