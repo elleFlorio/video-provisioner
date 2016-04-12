@@ -23,6 +23,10 @@ func init() {
 }
 
 func ReadDestinations(destString []string) {
+	if len(destString) == 0 {
+		return
+	}
+
 	var prob float64
 	var err error
 	probSum := 0.0
