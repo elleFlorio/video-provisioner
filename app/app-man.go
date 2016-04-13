@@ -42,13 +42,16 @@ func StartService() {
 		log.Fatal("Service cannot stast because has not been created")
 	}
 
+	log.Println("Hello from " + service.Name)
+
 	setNetworkAddress()
 	initializeJobsManager()
 	initializeDestinations()
+	initializeMetricService()
 	startSigsMonitor(ch_stop)
 	startJobsManager(ch_req)
-	initializeMetricService()
 	startDiscovery()
+	createLogger()
 
 	http.HandleFunc(responsePath, readResponse)
 	http.HandleFunc(messagePath, readMessage)
@@ -59,6 +62,7 @@ func StartService() {
 
 func setNetworkAddress() {
 	service.Network.Address = network.GenerateAddress(service.Network.Ip, service.Network.Port)
+	log.Println("My Address is " + service.Network.Address)
 }
 
 func initializeJobsManager() {
@@ -69,8 +73,8 @@ func initializeDestinations() {
 	network.ReadDestinations(service.Destinations)
 }
 
-func createLogger(name string) {
-	logger.New(name)
+func createLogger() {
+	logger.New(service.Name)
 }
 
 func startSigsMonitor(ch_stop chan struct{}) {
@@ -90,7 +94,7 @@ func initializeMetricService() {
 	}
 	err := metric.Initialize(service.Name, service.Network.Ip, config)
 	if err != nil {
-		log.Fatalf("Error: %s; failded to initialize metric service", err.Error())
+		log.Fatalf("Error: %s; failded to initialize metric service\n", err.Error())
 	}
 }
 

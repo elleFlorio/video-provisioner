@@ -42,11 +42,13 @@ func CreateReq(r *http.Request) (Request, error) {
 
 	toService, _ := network.ReadParam("service", r)
 
+	// Counter is not used, but it can be useful if I will need to
+	// implement requests with multiple destinations
 	req := Request{
 		ID:         requestID,
 		From:       message.Sender,
 		To:         toService,
-		Counter:    network.GetDestinationsNumber(),
+		Counter:    1,
 		Start:      start,
 		ExecTimeMs: 0,
 	}
@@ -91,14 +93,17 @@ func FinalizeReq(reqDone Request) {
 		}
 		addRequestToHistory(reqDone)
 	} else {
-		err = network.SendMessageToDestination(reqDone.ID)
-		if err != nil {
-			log.Println("Cannot dispatch message to all the destinations")
+		if network.GetDestinationsNumber() > 0 {
+			err = network.SendMessageToDestination(reqDone.ID)
+			if err != nil {
+				log.Println("Cannot dispatch message to destinations")
+				network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
+				return
+			}
+			addRequestToHistory(reqDone)
+		} else {
 			network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
-			return
 		}
-		addRequestToHistory(reqDone)
-		network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
 	}
 }
 

@@ -37,6 +37,12 @@ func InitializeJobsManager(lambda float64, probabilities []string) {
 		useProfiles = true
 	}
 
+	if useProfiles {
+		log.Println("Using load profiles")
+	} else {
+		log.Printf("Using lambda %f\n", lambda)
+	}
+
 }
 
 func ManageJobs(ch_req chan request.Request) {

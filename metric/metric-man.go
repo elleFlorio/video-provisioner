@@ -1,6 +1,7 @@
 package metric
 
 import (
+	"log"
 	"time"
 
 	"github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/github.com/influxdb/influxdb/client/v2"
@@ -23,6 +24,9 @@ var (
 )
 
 func Initialize(serviceName string, serviceAddress string, influxConf InfluxConfig) error {
+	log.Println("Initializing metric service...")
+	defer log.Println("Done")
+
 	var err error
 	tags = map[string]string{
 		"name":    serviceName,
@@ -52,6 +56,8 @@ func Initialize(serviceName string, serviceAddress string, influxConf InfluxConf
 	if err != nil {
 		return err
 	}
+
+	log.Println("Connected to metric service at address " + serviceAddress)
 
 	return nil
 }

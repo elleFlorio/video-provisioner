@@ -31,6 +31,9 @@ func init() {
 }
 
 func ReadProbabilities(values []string) {
+	log.Println("Reading profiles probabilities...")
+	defer log.Println("Done")
+
 	var err error
 	var profProb []string
 	var prob float64
@@ -128,7 +131,6 @@ func getValueFromLoad(values load) float64 {
 	return extractValueFromLoad(values)
 }
 
-// OK, this is replicated code, but without generics it's hard to avoid it...
 func extractProfileFromProbabilities(probabilities map[string]float64) string {
 	p := rnd.Float64()
 	probSum := 0.0
@@ -146,10 +148,8 @@ func extractProfileFromProbabilities(probabilities map[string]float64) string {
 
 func extractValueFromLoad(probabilities load) float64 {
 	p := rnd.Float64()
-	probSum := 0.0
 	for value, prob := range probabilities {
-		probSum += prob
-		if p <= probSum {
+		if p <= prob {
 			return value
 		}
 	}

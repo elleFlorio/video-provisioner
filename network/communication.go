@@ -27,6 +27,9 @@ func ReadDestinations(destString []string) {
 		return
 	}
 
+	log.Println("Reading destinations...")
+	defer log.Println("Done")
+
 	var prob float64
 	var err error
 	probSum := 0.0
@@ -46,6 +49,8 @@ func ReadDestinations(destString []string) {
 		destinations[destProb[0]] = prob
 
 		probSum += prob
+
+		log.Printf("Added destination %s with probability %f\n", destProb[0], prob)
 	}
 
 	if probSum != 1.0 {
