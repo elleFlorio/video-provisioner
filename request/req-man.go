@@ -85,13 +85,16 @@ func IsServiceWaiting() bool {
 
 func FinalizeReq(reqDone Request) {
 	var err error
+	isEndpointSet := network.IsEndpointSet()
 	if reqDone.To != "" {
 		err = network.SendMessageToSpecificService(reqDone.ID, reqDone.To)
 		if err != nil {
 			log.Println("Cannot dispatch message to service", reqDone.To)
 			return
 		}
-		addRequestToHistory(reqDone)
+		if !isEndpointSet {
+			addRequestToHistory(reqDone)
+		}
 	} else {
 		if network.GetDestinationsNumber() > 0 {
 			err = network.SendMessageToDestination(reqDone.ID)
@@ -100,9 +103,15 @@ func FinalizeReq(reqDone Request) {
 				network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
 				return
 			}
-			addRequestToHistory(reqDone)
+			if !isEndpointSet {
+				addRequestToHistory(reqDone)
+			}
 		} else {
-			network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
+			if isEndpointSet {
+				network.RespondeToEndpoint(reqDone.ID, "done")
+			} else {
+				network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
+			}
 		}
 	}
 }

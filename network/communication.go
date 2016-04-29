@@ -13,6 +13,7 @@ import (
 
 var (
 	destinations map[string]float64
+	endpoint     string
 	rnd          *rand.Rand
 )
 
@@ -62,6 +63,21 @@ func GetDestinationsNumber() int {
 	return len(destinations)
 }
 
+func SetEndpoint(endpointString string) {
+	endpoint = endpointString
+	if IsEndpointSet() {
+		log.Println("Endpoint set to " + endpoint)
+	}
+}
+
+func IsEndpointSet() bool {
+	if endpoint == "" {
+		return false
+	}
+
+	return true
+}
+
 func SendMessageToSpecificService(requestID string, service string) error {
 	instances, err := discovery.GetAvailableInstances(service)
 	if err != nil {
@@ -106,16 +122,26 @@ func getDestination() string {
 	return ""
 }
 
+func sendReqToDest(reqID string, dest string) {
+	go Send(dest, "do", reqID, GetMyAddress(), false)
+}
+
+func RespondeToEndpoint(reqId string, status string) {
+	instances, err := discovery.GetAvailableInstances(endpoint)
+	if err != nil {
+		log.Println("Cannot dispatch message to endpoint ", endpoint)
+		return
+	}
+	instance := getInstance(instances)
+	RespondeToRequest(instance, reqId, "done")
+}
+
 func getInstance(instances []string) string {
 	if len(instances) == 1 {
 		return instances[0]
 	}
 
 	return instances[rand.Intn(len(instances))]
-}
-
-func sendReqToDest(reqID string, dest string) {
-	go Send(dest, "do", reqID, GetMyAddress(), false)
 }
 
 func RespondeToRequest(dest string, reqId string, status string) {

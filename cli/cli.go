@@ -76,6 +76,10 @@ func Run() {
 					Usage: fmt.Sprintf("destination of request messages. " +
 						"Each destination should be in the format service:probability"),
 				},
+				cli.StringFlag{
+					Name:  "endpoint, E",
+					Usage: fmt.Sprintf("Endpoint of the requests."),
+				},
 			},
 		},
 	}

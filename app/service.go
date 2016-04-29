@@ -3,6 +3,7 @@ package app
 type Service struct {
 	Name         string
 	Destinations []string
+	Endpoint     string
 	Job          JobOpt
 	Discovery    DiscoveryOpt
 	Metrics      MetricsOpt

@@ -71,6 +71,7 @@ func initializeJobsManager() {
 
 func initializeDestinations() {
 	network.ReadDestinations(service.Destinations)
+	network.SetEndpoint(service.Endpoint)
 }
 
 func createLogger() {

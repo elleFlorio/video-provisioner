@@ -17,6 +17,7 @@ func start(c *cli.Context) {
 
 	name := c.Args().First()
 	destinations := c.StringSlice("destinations")
+	endpoint := c.String("endpoint")
 
 	lambda := c.Float64("lambda")
 	profiles := c.StringSlice("profiles")
@@ -61,6 +62,7 @@ func start(c *cli.Context) {
 	service := app.Service{
 		Name:         name,
 		Destinations: destinations,
+		Endpoint:     endpoint,
 		Job:          job,
 		Discovery:    discovery,
 		Metrics:      metrics,
