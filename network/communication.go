@@ -11,6 +11,8 @@ import (
 	"github.com/elleFlorio/video-provisioner/discovery"
 )
 
+const c_NO_DEST = "nodest"
+
 var (
 	destinations map[string]float64
 	endpoint     string
@@ -54,8 +56,13 @@ func ReadDestinations(destString []string) {
 		log.Printf("Added destination %s with probability %f\n", destProb[0], prob)
 	}
 
-	if probSum != 1.0 {
+	if probSum > 1.0 {
 		log.Fatalln("Error: the sum of destinations probabilities should be 1.0")
+	}
+
+	if probSum < 1.0 {
+		destinations[c_NO_DEST] = 1.0 - probSum
+		log.Printf("Added destination %s with probability %f\n", c_NO_DEST, 1.0-probSum)
 	}
 }
 
@@ -91,6 +98,9 @@ func SendMessageToSpecificService(requestID string, service string) error {
 
 func SendMessageToDestination(requestID string) error {
 	destination := getDestination()
+	if destination == c_NO_DEST {
+		return errors.New("Message to no destination")
+	}
 	instances, err := discovery.GetAvailableInstances(destination)
 	if err != nil {
 		log.Println("Cannot dispatch message to service ", destination)

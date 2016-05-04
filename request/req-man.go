@@ -99,8 +99,12 @@ func FinalizeReq(reqDone Request) {
 		if network.GetDestinationsNumber() > 0 {
 			err = network.SendMessageToDestination(reqDone.ID)
 			if err != nil {
-				log.Println("Cannot dispatch message to destinations")
-				network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
+				log.Println(err)
+				if isEndpointSet {
+					network.RespondeToEndpoint(reqDone.ID, "done")
+				} else {
+					network.RespondeToRequest(reqDone.From, reqDone.ID, "done")
+				}
 				return
 			}
 			if !isEndpointSet {
