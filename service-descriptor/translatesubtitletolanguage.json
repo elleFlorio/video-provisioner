@@ -1,0 +1,36 @@
+{
+	"Name":"translatesubtitletolanguage",
+	"Type":"getsubtitles",
+	"Image":"elleflorio/translatesubtitletolanguage",
+	"Remote":"/gru/pippo/services/translatesubtitletolanguage",
+	"DiscoveryPort":"50540",
+	"Constraints":{
+		"MaxRespTime":1500
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":30,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50540":"50540-50544"
+		},
+		"Cmd":[
+			"start",
+			"translatesubtitletolanguage",
+			"-p",
+			"50540",
+			"-l",
+			"500",
+			"-d",
+			"applysubtitles:1.0",
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}

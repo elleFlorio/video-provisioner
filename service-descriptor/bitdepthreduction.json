@@ -1,0 +1,36 @@
+{
+	"Name":"bitdepthreduction",
+	"Type":"bitdepthreduction",
+	"Image":"elleflorio/bitdepthreduction",
+	"Remote":"/gru/pippo/services/bitdepthreduction",
+	"DiscoveryPort":"50400",
+	"Constraints":{
+		"MaxRespTime":3900
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":30,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50400":"50400-50404"
+		},
+		"Cmd":[
+			"start",
+			"bitdepthreduction",
+			"-p",
+			"50400",
+			"-l",
+			"1300",
+			"-d",
+			"getsubtitles:0.2",
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}

@@ -1,0 +1,42 @@
+env_vars = ETCD_ADDR HostIP INFLUX_ADDR INFLUX_USER INFLUX_PWD
+
+VIDEOPROVISIONER - 34100
+start videoprovisioner -p 8080? -d getvideoresource:1.0 -ds
+
+----------------------- GETVIDEORESOURCE ------------------------- 2625
+
+CHECKIFLOCALLYAVAILABLE
+start checkiflocallyavailable -p 50110 -l 1200 -d downloadvideo:0.95 -E videoprovisioner
+
+DOWLOADVIDEO
+start downloadvideo -p 50120 -l 1500 -d scalevideo:1.0 -E videoprovisioner
+
+-------------------------------------------------------------------
+
+SCALEVIDEO
+start scalevideo -p 50200 -lp scaling_25_histogram:0.8 -lp scaling_50_histogram:0.1 -lp scaling_75_histogram:0.1 -d transcodevideo:1.0 -E videoprovisioner
+
+TRANSCODEVIDEO
+start transcodevideo -p 50300 -l 900 -d bitdepthreduction:1.0 -E videoprovisioner
+
+BITDEPTHREDUCTION
+start bitdepthreduction -p 50400 -l 1300 -d getsubtitles:0.2 -E videoprovisioner
+
+------------------------ GETSUBTITLES ----------------------------- 3279
+
+CHECKIFSUBTITLESAVAILABLE
+start checkifsubtitlesavailable -p 50510 -l 700 -d checkifsubtitlesexists:0.95 -E videoprovisioner
+
+CHECKIFSUBTITLESEXISTS
+start checkifsubtitlesexists -p 50520 -l 1500 -d getdefaultsubtitles:0.9 -E videoprovisioner
+
+GETDEFAULTSUBTITLES
+start getdefaultsubtitles -p 50530 -l 1200 -d translatesubtitletolanguage:0.3 -E videoprovisioner
+
+TRANSLATESUBTITLETOLANGUAGE
+start translatesubtitletolanguage -p 50540 -l 500 -d applysubtitles:1.0 -E videoprovisioner
+
+-------------------------------------------------------------------
+
+APPLYSUBTITLES
+start applysubtitles -p 50600 -l 600 -E videoprovisioner

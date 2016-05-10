@@ -1,0 +1,36 @@
+{
+	"Name":"downloadvideo",
+	"Type":"getvideoresource",
+	"Image":"elleflorio/downloadvideo",
+	"Remote":"/gru/pippo/services/downloadvideo",
+	"DiscoveryPort":"50120",
+	"Constraints":{
+		"MaxRespTime":4500
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":30,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50120":"50120-50124"
+		},
+		"Cmd":[
+			"start",
+			"downloadvideo",
+			"-p",
+			"50120",
+			"-l",
+			"1500",
+			"-d",
+			"scalevideo:1.0"
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}

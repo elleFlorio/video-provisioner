@@ -53,7 +53,7 @@ func RegisterToEtcd(name string, address string) error {
 		return err
 	}
 
-	myKey = "testApp/" + name + "/" + uuid
+	myKey = "video-provisioner/" + name + "/" + uuid
 	myAddress = address
 
 	_, err = kAPI.Set(

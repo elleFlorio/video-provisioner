@@ -1,0 +1,36 @@
+{
+	"Name":"checkifsubtitlesavailable",
+	"Type":"getsubtitles",
+	"Image":"elleflorio/checkifsubtitlesavailable",
+	"Remote":"/gru/pippo/services/checkifsubtitlesavailable",
+	"DiscoveryPort":"50510",
+	"Constraints":{
+		"MaxRespTime":2100
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":30,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50510":"50510-50514"
+		},
+		"Cmd":[
+			"start",
+			"checkifsubtitlesavailable",
+			"-p",
+			"50510",
+			"-l",
+			"700",
+			"-d",
+			"checkifsubtitlesexists:0.95",
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}

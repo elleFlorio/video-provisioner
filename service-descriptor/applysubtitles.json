@@ -1,0 +1,34 @@
+{
+	"Name":"applysubtitles",
+	"Type":"applysubtitles",
+	"Image":"elleflorio/applysubtitles",
+	"Remote":"/gru/pippo/services/applysubtitles",
+	"DiscoveryPort":"50600",
+	"Constraints":{
+		"MaxRespTime":1200
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":30,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50600":"50600-50604"
+		},
+		"Cmd":[
+			"start",
+			"applysubtitles",
+			"-p",
+			"50600",
+			"-l",
+			"600",
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}
