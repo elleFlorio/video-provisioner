@@ -102,7 +102,7 @@ func KeepAlive(ch_stop chan struct{}) {
 }
 
 func GetAvailableInstances(service string) ([]string, error) {
-	key := "testApp/" + service + "/"
+	key := "video-provisioner/" + service + "/"
 	available := []string{}
 	resp, err := kAPI.Get(context.Background(), key, nil)
 	if err != nil {
