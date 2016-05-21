@@ -50,7 +50,7 @@ func GenerateAddress(ip string, port string) string {
 		myPort = ":" + strconv.Itoa(p)
 	}
 
-	myAddress = "http://" + myIp + myPort
+	myAddress = myIp + myPort
 
 	return myAddress
 }

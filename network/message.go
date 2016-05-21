@@ -33,9 +33,9 @@ func doRequest(method string, path string, body []byte) {
 }
 
 func Send(address string, message string, args string, from string, isResponse bool) {
-	path := address + "/message"
+	path := "http://" + address + "/message"
 	if isResponse {
-		path = address + "/response"
+		path = "http://" + address + "/response"
 	}
 	m := Message{
 		Sender: from,
