@@ -1,0 +1,36 @@
+{
+	"Name":"transcodevideo",
+	"Type":"transcodevideo",
+	"Image":"elleflorio/transcodevideo",
+	"Remote":"/gru/pippo/services/transcodevideo",
+	"DiscoveryPort":"50300",
+	"Constraints":{
+		"MaxRespTime":1800
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":30,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50300":"50300-50304"
+		},
+		"Cmd":[
+			"start",
+			"transcodevideo",
+			"-p",
+			"50300",
+			"-l",
+			"900",
+			"-d",
+			"bitdepthreduction:1.0",
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}

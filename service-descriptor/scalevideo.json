@@ -1,0 +1,40 @@
+{
+	"Name":"scalevideo",
+	"Type":"scalevideo",
+	"Image":"elleflorio/scalevideo",
+	"Remote":"/gru/pippo/services/scalevideo",
+	"DiscoveryPort":"50200",
+	"Constraints":{
+		"MaxRespTime":85500
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":120,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50200":"50200-50204"
+		},
+		"Cmd":[
+			"start",
+			"scalevideo",
+			"-p",
+			"50200",
+			"-lp",
+			"scaling_25_histogram:0.8",
+			"-lp",
+			"scaling_50_histogram:0.1",
+			"-lp",
+			"scaling_75_histogram:0.1",
+			"-d",
+			"transcodevideo:1.0",
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}

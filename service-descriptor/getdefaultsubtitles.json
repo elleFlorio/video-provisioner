@@ -1,0 +1,36 @@
+{
+	"Name":"getdefaultsubtitles",
+	"Type":"getsubtitles",
+	"Image":"elleflorio/getdefaultsubtitles",
+	"Remote":"/gru/pippo/services/getdefaultsubtitles",
+	"DiscoveryPort":"50530",
+	"Constraints":{
+		"MaxRespTime":2400
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":30,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50530":"50530-50534"
+		},
+		"Cmd":[
+			"start",
+			"getdefaultsubtitles",
+			"-p",
+			"50530",
+			"-l",
+			"1200",
+			"-d",
+			"translatesubtitletolanguage:0.3",
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}

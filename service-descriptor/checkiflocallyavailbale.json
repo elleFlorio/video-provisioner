@@ -1,0 +1,36 @@
+{
+	"Name":"checkiflocallyavailable",
+	"Type":"getvideoresource",
+	"Image":"elleflorio/checkiflocallyavailable",
+	"Remote":"/gru/pippo/services/checkiflocallyavailable",
+	"DiscoveryPort":"50110",
+	"Constraints":{
+		"MaxRespTime":2400
+	},
+	"Configuration":{
+		"cpunumber":1,
+		"StopTimeout":30,
+		"Env": {
+            "ETCD_ADDR":"",
+            "HostIP":"",
+            "INFLUX_USER":"",
+            "INFLUX_PWD":"",
+            "INFLUX_ADDR":""
+        },
+		"Ports":{
+			"50110":"50110-50114"
+		},
+		"Cmd":[
+			"start",
+			"checkiflocallyavailable",
+			"-p",
+			"50110",
+			"-l",
+			"1200",
+			"-d",
+			"downloadvideo:0.95"
+			"-E",
+			"videoprovisioner"
+		]
+	}
+}
