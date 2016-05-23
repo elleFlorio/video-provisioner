@@ -149,18 +149,14 @@ func readResponse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reqId := message.Args
-	if req, ok := request.GetRequest(reqId); ok {
-		respTimeMs = time.Since(req.Start).Seconds() * 1000
-		complete := request.UpdateRequestInHistory(reqId)
-		if complete {
-			network.RespondeToRequest(req.From, req.ID, message.Body)
-		}
-	} else {
-		log.Println("Cannot find request ID in history")
+	reqID := message.Args
+	reqStart, err := discovery.GetRequestStartFromHistory(reqID)
+	if err != nil {
+		log.Println("Cannot find request in history")
 		w.WriteHeader(422)
 		return
 	}
+	respTimeMs = time.Since(reqStart).Seconds() * 1000
 	if message.Body == "done" {
 		logger.LogResponseTime(respTimeMs)
 		metric.SendResponseTime(respTimeMs)
@@ -168,5 +164,19 @@ func readResponse(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error: request lost.")
 	}
 
+	discovery.RemoveRequestFromHistory(reqID)
+
 	w.WriteHeader(http.StatusCreated)
 }
+
+// if req, ok := request.GetRequest(reqId); ok {
+// 	respTimeMs = time.Since(req.Start).Seconds() * 1000
+// 	complete := request.UpdateRequestInHistory(reqId)
+// 	if complete {
+// 		network.RespondeToRequest(req.From, req.ID, message.Body)
+// 	}
+// } else {
+// 	log.Println("Cannot find request ID in history")
+// 	w.WriteHeader(422)
+// 	return
+// }

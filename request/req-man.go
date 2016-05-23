@@ -3,23 +3,23 @@ package request
 import (
 	"log"
 	"net/http"
-	"runtime"
-	"strconv"
-	"sync"
+	_ "runtime"
+	_ "sync"
 	"time"
 
+	"github.com/elleFlorio/video-provisioner/discovery"
 	"github.com/elleFlorio/video-provisioner/network"
+	"github.com/elleFlorio/video-provisioner/utils"
 )
 
 var (
-	requests map[string]Request
-	mutex_c  = &sync.Mutex{}
-	mutex_r  = &sync.Mutex{}
-	counter  = 1
+	//requests map[string]Request
+	//mutex_r  = &sync.Mutex{}
+	counter = 1
 )
 
 func init() {
-	requests = make(map[string]Request)
+	//requests = make(map[string]Request)
 }
 
 func CreateReq(r *http.Request) (Request, error) {
@@ -36,7 +36,7 @@ func CreateReq(r *http.Request) (Request, error) {
 	requestID = message.Args
 	if requestID == "" {
 		log.Println("New request, generating ID")
-		requestID = strconv.Itoa(readAndIncrementCounter())
+		requestID, _ = utils.GenerateUUID()
 	}
 	log.Printf("Received request %s from %s\n", requestID, message.Sender)
 
@@ -56,29 +56,21 @@ func CreateReq(r *http.Request) (Request, error) {
 	return req, nil
 }
 
-func readAndIncrementCounter() int {
-	mutex_c.Lock()
-	c := counter
-	counter++
-	mutex_c.Unlock()
-	runtime.Gosched()
-
-	return c
-}
-
-func GetRequest(reqId string) (Request, bool) {
-	req, ok := requests[reqId]
-	return req, ok
-}
+// func GetRequest(reqId string) (Request, bool) {
+// 	req, ok := requests[reqId]
+// 	return req, ok
+// }
 
 func IsServiceWaiting() bool {
-	mutex_r.Lock()
-	requestsPending := len(requests)
-	mutex_r.Unlock()
+	// mutex_r.Lock()
+	// requestsPending := len(requests)
+	// mutex_r.Unlock()
 
-	if requestsPending != 0 {
-		return true
-	}
+	// if requestsPending != 0 {
+	// 	return true
+	// }
+
+	// return false
 
 	return false
 }
@@ -93,7 +85,9 @@ func FinalizeReq(reqDone Request) {
 			return
 		}
 		if !isEndpointSet {
-			addRequestToHistory(reqDone)
+			//addRequestToHistory(reqDone)
+			discovery.AddRequestToHistory(reqDone.ID, reqDone.Start)
+
 		}
 	} else {
 		if network.GetDestinationsNumber() > 0 {
@@ -108,7 +102,8 @@ func FinalizeReq(reqDone Request) {
 				return
 			}
 			if !isEndpointSet {
-				addRequestToHistory(reqDone)
+				//addRequestToHistory(reqDone)
+				discovery.AddRequestToHistory(reqDone.ID, reqDone.Start)
 			}
 		} else {
 			if isEndpointSet {
@@ -120,25 +115,25 @@ func FinalizeReq(reqDone Request) {
 	}
 }
 
-func addRequestToHistory(req Request) {
-	mutex_r.Lock()
-	requests[req.ID] = req
-	mutex_r.Unlock()
-	runtime.Gosched()
-}
+// func addRequestToHistory(req Request) {
+// 	mutex_r.Lock()
+// 	requests[req.ID] = req
+// 	mutex_r.Unlock()
+// 	runtime.Gosched()
+// }
 
-func UpdateRequestInHistory(reqId string) bool {
-	deleted := false
-	mutex_r.Lock()
-	req := requests[reqId]
-	req.Counter -= 1
-	if req.Counter <= 0 {
-		delete(requests, reqId)
-		deleted = true
-	} else {
-		requests[reqId] = req
-	}
-	mutex_r.Unlock()
-	runtime.Gosched()
-	return deleted
-}
+// func UpdateRequestInHistory(reqId string) bool {
+// 	deleted := false
+// 	mutex_r.Lock()
+// 	req := requests[reqId]
+// 	req.Counter -= 1
+// 	if req.Counter <= 0 {
+// 		delete(requests, reqId)
+// 		deleted = true
+// 	} else {
+// 		requests[reqId] = req
+// 	}
+// 	mutex_r.Unlock()
+// 	runtime.Gosched()
+// 	return deleted
+// }

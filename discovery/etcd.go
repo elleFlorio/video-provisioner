@@ -7,12 +7,14 @@ import (
 
 	"github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/github.com/coreos/etcd/client"
 	"github.com/elleFlorio/video-provisioner/Godeps/_workspace/src/golang.org/x/net/context"
+	"github.com/elleFlorio/video-provisioner/utils"
 )
 
 var (
 	uuid              string
 	myKey             string
 	myAddress         string
+	myName            string
 	kAPI              client.KeysAPI
 	ErrNoDestinations = errors.New("No destinations available")
 )
@@ -47,7 +49,7 @@ func InitializeEtcd(uri string) error {
 func RegisterToEtcd(name string, address string) error {
 	var err error
 
-	uuid, err = generateUUID()
+	uuid, err = utils.GenerateUUID()
 	if err != nil {
 		log.Println(err)
 		return err
@@ -55,6 +57,7 @@ func RegisterToEtcd(name string, address string) error {
 
 	myKey = "app/video/services/" + name + "/" + uuid
 	myAddress = address
+	myName = name
 
 	_, err = kAPI.Set(
 		context.Background(),
@@ -120,4 +123,52 @@ func GetAvailableInstances(service string) ([]string, error) {
 	}
 
 	return available, nil
+}
+
+func AddRequestToHistory(reqID string, start time.Time) error {
+	key := "app/video/requests/" + myName + "/" + reqID
+	value := start.Format(time.RFC3339Nano)
+
+	_, err := kAPI.Set(
+		context.Background(),
+		key,
+		value,
+		nil,
+	)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func GetRequestStartFromHistory(reqID string) (time.Time, error) {
+	key := "app/video/requests/" + myName + "/" + reqID
+
+	resp, err := kAPI.Get(context.Background(), key, nil)
+	if err != nil {
+		log.Println(err)
+		return time.Now(), err
+	}
+
+	value := resp.Node.Value
+	start, err := time.Parse(time.RFC3339Nano, value)
+	if err != nil {
+		log.Println(err)
+		return time.Now(), err
+	}
+
+	return start, nil
+}
+
+func RemoveRequestFromHistory(reqID string) error {
+	key := "app/video/requests/" + myName + "/" + reqID
+	_, err := kAPI.Delete(context.Background(), key, nil)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }

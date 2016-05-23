@@ -1,11 +1,11 @@
-package discovery
+package utils
 
 import (
 	"crypto/rand"
 	"encoding/hex"
 )
 
-func generateUUID() (string, error) {
+func GenerateUUID() (string, error) {
 	u := make([]byte, 16)
 	_, err := rand.Read(u)
 	if err != nil {
