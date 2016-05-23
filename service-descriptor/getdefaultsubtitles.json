@@ -2,7 +2,7 @@
 	"Name":"getdefaultsubtitles",
 	"Type":"getsubtitles",
 	"Image":"elleflorio/getdefaultsubtitles",
-	"Remote":"/gru/pippo/services/getdefaultsubtitles",
+	"Remote":"/gru/video/services/getdefaultsubtitles",
 	"DiscoveryPort":"50530",
 	"Constraints":{
 		"MaxRespTime":2400

@@ -2,7 +2,7 @@
 	"Name":"transcodevideo",
 	"Type":"transcodevideo",
 	"Image":"elleflorio/transcodevideo",
-	"Remote":"/gru/pippo/services/transcodevideo",
+	"Remote":"/gru/video/services/transcodevideo",
 	"DiscoveryPort":"50300",
 	"Constraints":{
 		"MaxRespTime":1800

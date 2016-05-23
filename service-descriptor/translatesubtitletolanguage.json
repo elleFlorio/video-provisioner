@@ -2,7 +2,7 @@
 	"Name":"translatesubtitletolanguage",
 	"Type":"getsubtitles",
 	"Image":"elleflorio/translatesubtitletolanguage",
-	"Remote":"/gru/pippo/services/translatesubtitletolanguage",
+	"Remote":"/gru/video/services/translatesubtitletolanguage",
 	"DiscoveryPort":"50540",
 	"Constraints":{
 		"MaxRespTime":1500

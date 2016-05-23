@@ -1,11 +1,11 @@
 {
-	"Name":"downloadvideo",
-	"Type":"getvideoresource",
-	"Image":"elleflorio/downloadvideo",
-	"Remote":"/gru/video/services/downloadvideo",
-	"DiscoveryPort":"50120",
+	"Name":"videoprovisioner",
+	"Type":"videoprovisioner",
+	"Image":"elleflorio/videoprovisioner",
+	"Remote":"/gru/video/services/videoprovisioner",
+	"DiscoveryPort":"50000",
 	"Constraints":{
-		"MaxRespTime":4500
+		"MaxRespTime":1000
 	},
 	"Configuration":{
 		"cpunumber":1,
@@ -18,19 +18,17 @@
             "INFLUX_ADDR":""
         },
 		"Ports":{
-			"50120":"50120-50124"
+			"50000":"50000-50004"
 		},
 		"Cmd":[
 			"start",
-			"downloadvideo",
+			"videoprovisioner",
 			"-p",
-			"50120",
+			"50000",
 			"-l",
-			"1500",
+			"500",
 			"-d",
-			"scalevideo:1.0"
-			"-E",
-			"videoprovisioner"
+			"checkiflocallyavailable:1.0"
 		]
 	}
 }

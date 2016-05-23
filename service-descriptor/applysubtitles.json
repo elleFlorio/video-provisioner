@@ -2,7 +2,7 @@
 	"Name":"applysubtitles",
 	"Type":"applysubtitles",
 	"Image":"elleflorio/applysubtitles",
-	"Remote":"/gru/pippo/services/applysubtitles",
+	"Remote":"/gru/video/services/applysubtitles",
 	"DiscoveryPort":"50600",
 	"Constraints":{
 		"MaxRespTime":1200

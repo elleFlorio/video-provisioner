@@ -2,7 +2,7 @@
 	"Name":"checkifsubtitlesexists",
 	"Type":"getsubtitles",
 	"Image":"elleflorio/checkifsubtitlesexists",
-	"Remote":"/gru/pippo/services/checkifsubtitlesexists",
+	"Remote":"/gru/video/services/checkifsubtitlesexists",
 	"DiscoveryPort":"50520",
 	"Constraints":{
 		"MaxRespTime":3000

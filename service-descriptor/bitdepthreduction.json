@@ -2,7 +2,7 @@
 	"Name":"bitdepthreduction",
 	"Type":"bitdepthreduction",
 	"Image":"elleflorio/bitdepthreduction",
-	"Remote":"/gru/pippo/services/bitdepthreduction",
+	"Remote":"/gru/video/services/bitdepthreduction",
 	"DiscoveryPort":"50400",
 	"Constraints":{
 		"MaxRespTime":3900

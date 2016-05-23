@@ -2,7 +2,7 @@
 	"Name":"checkiflocallyavailable",
 	"Type":"getvideoresource",
 	"Image":"elleflorio/checkiflocallyavailable",
-	"Remote":"/gru/pippo/services/checkiflocallyavailable",
+	"Remote":"/gru/video/services/checkiflocallyavailable",
 	"DiscoveryPort":"50110",
 	"Constraints":{
 		"MaxRespTime":2400

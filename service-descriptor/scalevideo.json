@@ -2,7 +2,7 @@
 	"Name":"scalevideo",
 	"Type":"scalevideo",
 	"Image":"elleflorio/scalevideo",
-	"Remote":"/gru/pippo/services/scalevideo",
+	"Remote":"/gru/video/services/scalevideo",
 	"DiscoveryPort":"50200",
 	"Constraints":{
 		"MaxRespTime":85500
