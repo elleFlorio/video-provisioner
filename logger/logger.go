@@ -18,3 +18,7 @@ func LogExecutionTime(execTime float64) {
 func LogResponseTime(respTime float64) {
 	log.Println("gru:" + name + ":" + "response_time" + ":" + strconv.FormatFloat(respTime, 'f', 2, 64) + ":ms")
 }
+
+func LogRequestsPerMinute(rpm int) {
+	log.Println("gru:" + name + ":" + "rpm" + ":" + strconv.Itoa(rpm) + ":short")
+}

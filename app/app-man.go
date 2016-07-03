@@ -52,6 +52,7 @@ func StartService() {
 	startJobsManager(ch_req)
 	startDiscovery()
 	createLogger()
+	startReqCounter()
 
 	http.HandleFunc(responsePath, readResponse)
 	http.HandleFunc(messagePath, readMessage)
@@ -76,6 +77,10 @@ func initializeDestinations() {
 
 func createLogger() {
 	logger.New(service.Name)
+}
+
+func startReqCounter() {
+	request.StartReqCounter()
 }
 
 func startSigsMonitor(ch_stop chan struct{}) {

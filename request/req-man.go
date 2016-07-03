@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/elleFlorio/video-provisioner/discovery"
+	"github.com/elleFlorio/video-provisioner/logger"
 	"github.com/elleFlorio/video-provisioner/network"
 	"github.com/elleFlorio/video-provisioner/utils"
 )
@@ -15,11 +16,14 @@ import (
 var (
 	//requests map[string]Request
 	//mutex_r  = &sync.Mutex{}
-	counter = 1
+	ch_req  chan struct{}
+	counter int
 )
 
 func init() {
 	//requests = make(map[string]Request)
+	ch_req = make(chan struct{})
+	counter = 0
 }
 
 func CreateReq(r *http.Request) (Request, error) {
@@ -52,6 +56,8 @@ func CreateReq(r *http.Request) (Request, error) {
 		Start:      start,
 		ExecTimeMs: 0,
 	}
+
+	updateReqCounter()
 
 	return req, nil
 }
@@ -115,25 +121,24 @@ func FinalizeReq(reqDone Request) {
 	}
 }
 
-// func addRequestToHistory(req Request) {
-// 	mutex_r.Lock()
-// 	requests[req.ID] = req
-// 	mutex_r.Unlock()
-// 	runtime.Gosched()
-// }
+func StartReqCounter() {
+	go startReqCounter()
+}
 
-// func UpdateRequestInHistory(reqId string) bool {
-// 	deleted := false
-// 	mutex_r.Lock()
-// 	req := requests[reqId]
-// 	req.Counter -= 1
-// 	if req.Counter <= 0 {
-// 		delete(requests, reqId)
-// 		deleted = true
-// 	} else {
-// 		requests[reqId] = req
-// 	}
-// 	mutex_r.Unlock()
-// 	runtime.Gosched()
-// 	return deleted
-// }
+func updateReqCounter() {
+	ch_req <- struct{}{}
+}
+
+func startReqCounter() {
+	ticker := time.NewTicker(time.Duration(60) * time.Second)
+
+	for {
+		select {
+		case <-ticker.C:
+			logger.LogRequestsPerMinute(counter)
+			counter = 0
+		case <-ch_req:
+			counter += 1
+		}
+	}
+}
