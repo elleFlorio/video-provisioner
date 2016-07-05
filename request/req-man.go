@@ -9,6 +9,7 @@ import (
 
 	"github.com/elleFlorio/video-provisioner/discovery"
 	"github.com/elleFlorio/video-provisioner/logger"
+	"github.com/elleFlorio/video-provisioner/metric"
 	"github.com/elleFlorio/video-provisioner/network"
 	"github.com/elleFlorio/video-provisioner/utils"
 )
@@ -16,14 +17,18 @@ import (
 var (
 	//requests map[string]Request
 	//mutex_r  = &sync.Mutex{}
-	ch_req  chan struct{}
-	counter int
+	reqArr       []string
+	ch_req_arr   chan string
+	ch_req_done  chan struct{}
+	counter_done int
 )
 
 func init() {
 	//requests = make(map[string]Request)
-	ch_req = make(chan struct{})
-	counter = 0
+	reqArr = []string{}
+	ch_req_arr = make(chan string)
+	ch_req_done = make(chan struct{})
+	counter_done = 0
 }
 
 func CreateReq(r *http.Request) (Request, error) {
@@ -57,7 +62,7 @@ func CreateReq(r *http.Request) (Request, error) {
 		ExecTimeMs: 0,
 	}
 
-	updateReqCounter()
+	updateReqArr(requestID)
 
 	return req, nil
 }
@@ -119,14 +124,22 @@ func FinalizeReq(reqDone Request) {
 			}
 		}
 	}
+
+	if contains(reqArr, reqDone.ID) {
+		updateReqDoneCounter()
+	}
 }
 
 func StartReqCounter() {
 	go startReqCounter()
 }
 
-func updateReqCounter() {
-	ch_req <- struct{}{}
+func updateReqArr(id string) {
+	ch_req_arr <- id
+}
+
+func updateReqDoneCounter() {
+	ch_req_done <- struct{}{}
 }
 
 func startReqCounter() {
@@ -135,10 +148,26 @@ func startReqCounter() {
 	for {
 		select {
 		case <-ticker.C:
-			logger.LogRequestsPerMinute(counter)
-			counter = 0
-		case <-ch_req:
-			counter += 1
+			logger.LogRequestsArrivedPerMinute(len(reqArr))
+			logger.LogRequestsDonePerMinute(counter_done)
+			metric.SendRequestsArrived(len(reqArr))
+			metric.SendRequestsDone(counter_done)
+			reqArr = reqArr[:0]
+			counter_done = 0
+		case id := <-ch_req_arr:
+			reqArr = append(reqArr, id)
+		case <-ch_req_done:
+			counter_done += 1
 		}
 	}
+}
+
+func contains(slice []string, item string) bool {
+	for _, elem := range slice {
+		if elem == item {
+			return true
+		}
+	}
+
+	return false
 }

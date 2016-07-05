@@ -18,6 +18,8 @@ var (
 	tags           map[string]string
 	execFields     map[string]interface{}
 	respTimeFields map[string]interface{}
+	reqArrFields   map[string]interface{}
+	reqDoneFields  map[string]interface{}
 	influx         client.Client
 	config         InfluxConfig
 	batch          client.BatchPoints
@@ -36,6 +38,12 @@ func Initialize(serviceName string, serviceAddress string, influxConf InfluxConf
 		"value": 0.0,
 	}
 	respTimeFields = map[string]interface{}{
+		"value": 0.0,
+	}
+	reqArrFields = map[string]interface{}{
+		"value": 0.0,
+	}
+	reqDoneFields = map[string]interface{}{
 		"value": 0.0,
 	}
 	config = influxConf
@@ -77,6 +85,30 @@ func SendExecutionTime(execTime float64) error {
 func SendResponseTime(respTime float64) error {
 	respTimeFields["value"] = respTime
 	point, err := client.NewPoint("response_time", tags, respTimeFields, time.Now())
+	if err != nil {
+		return err
+	}
+
+	batch.AddPoint(point)
+	influx.Write(batch)
+	return nil
+}
+
+func SendRequestsArrived(rpm int) error {
+	reqArrFields["value"] = rpm
+	point, err := client.NewPoint("req_arr", tags, reqArrFields, time.Now())
+	if err != nil {
+		return err
+	}
+
+	batch.AddPoint(point)
+	influx.Write(batch)
+	return nil
+}
+
+func SendRequestsDone(rpm int) error {
+	reqDoneFields["value"] = rpm
+	point, err := client.NewPoint("req_done", tags, reqDoneFields, time.Now())
 	if err != nil {
 		return err
 	}
