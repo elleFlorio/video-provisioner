@@ -8,14 +8,14 @@ import (
 
 const c_MAXITER = 100
 
-func Work(workTime float64, req request.Request, ch_done chan request.Request) {
+func Work(workTime float64, req request.Request, ch_done chan request.Request) request.Request {
 	timer := time.NewTimer(time.Millisecond * time.Duration(workTime))
 	for {
 		select {
 		case <-timer.C:
 			req.ExecTimeMs = computeExecutionTime(req.Start)
-			ch_done <- req
-			return
+			//ch_done <- req
+			return req
 		default:
 			cpuTest()
 		}

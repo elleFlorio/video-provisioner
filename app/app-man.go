@@ -29,7 +29,7 @@ var (
 )
 
 func init() {
-	ch_req = make(chan request.Request)
+	ch_req = make(chan request.Request, 1000)
 	ch_stop = make(chan struct{})
 }
 

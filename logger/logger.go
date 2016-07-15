@@ -22,7 +22,3 @@ func LogResponseTime(respTime float64) {
 func LogRequestsArrivedPerMinute(rpm int) {
 	log.Println("gru:" + name + ":" + "rpm_arr" + ":" + strconv.Itoa(rpm) + ":short")
 }
-
-func LogRequestsDonePerMinute(rpm int) {
-	log.Println("gru:" + name + ":" + "rpm_done" + ":" + strconv.Itoa(rpm) + ":short")
-}

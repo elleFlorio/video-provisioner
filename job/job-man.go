@@ -54,12 +54,16 @@ func ManageJobs(ch_req chan request.Request) {
 		case req := <-ch_req:
 			addReqToWorks(req)
 			workTime = getWorkTime()
-			go Work(workTime, req, ch_done)
-		case reqDone := <-ch_done:
+			reqDone := Work(workTime, req, ch_done)
 			logger.LogExecutionTime(reqDone.ExecTimeMs)
 			request.FinalizeReq(reqDone)
 			removeReqFromWorks(reqDone.ID)
 			metric.SendExecutionTime(reqDone.ExecTimeMs)
+			// case reqDone := <-ch_done:
+			// 	logger.LogExecutionTime(reqDone.ExecTimeMs)
+			// 	request.FinalizeReq(reqDone)
+			// 	removeReqFromWorks(reqDone.ID)
+			// 	metric.SendExecutionTime(reqDone.ExecTimeMs)
 		}
 	}
 }
