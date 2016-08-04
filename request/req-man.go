@@ -18,12 +18,14 @@ var (
 	//requests map[string]Request
 	//mutex_r  = &sync.Mutex{}
 	ch_req_arr  chan struct{}
+	ch_req_stop chan struct{}
 	counter_arr int
 )
 
 func init() {
 	//requests = make(map[string]Request)
 	ch_req_arr = make(chan struct{})
+	ch_req_stop = make(chan struct{})
 	counter_arr = 0
 }
 
@@ -126,6 +128,9 @@ func StartReqCounter() {
 	go startReqCounter()
 }
 
+func StopReqCounter() {
+	ch_req_stop <- struct{}{}
+}
 func updateReqArr() {
 	ch_req_arr <- struct{}{}
 }
@@ -141,6 +146,11 @@ func startReqCounter() {
 			counter_arr = 0
 		case <-ch_req_arr:
 			counter_arr += 1
+		case <-ch_req_stop:
+			logger.LogRequestsArrivedPerMinute(counter_arr)
+			metric.SendRequestsArrived(counter_arr)
+			counter_arr = 0
+			return
 		}
 	}
 }
