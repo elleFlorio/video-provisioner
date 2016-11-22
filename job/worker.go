@@ -14,7 +14,6 @@ func Work(workTime float64, req request.Request, ch_done chan request.Request) r
 		select {
 		case <-timer.C:
 			req.ExecTimeMs = computeExecutionTime(req.Start)
-			//ch_done <- req
 			return req
 		default:
 			cpuTest()

@@ -15,15 +15,12 @@ import (
 )
 
 var (
-	//requests map[string]Request
-	//mutex_r  = &sync.Mutex{}
 	ch_req_arr  chan struct{}
 	ch_req_stop chan struct{}
 	counter_arr int
 )
 
 func init() {
-	//requests = make(map[string]Request)
 	ch_req_arr = make(chan struct{})
 	ch_req_stop = make(chan struct{})
 	counter_arr = 0
@@ -65,25 +62,6 @@ func CreateReq(r *http.Request) (Request, error) {
 	return req, nil
 }
 
-// func GetRequest(reqId string) (Request, bool) {
-// 	req, ok := requests[reqId]
-// 	return req, ok
-// }
-
-func IsServiceWaiting() bool {
-	// mutex_r.Lock()
-	// requestsPending := len(requests)
-	// mutex_r.Unlock()
-
-	// if requestsPending != 0 {
-	// 	return true
-	// }
-
-	// return false
-
-	return false
-}
-
 func FinalizeReq(reqDone Request) {
 	var err error
 	isEndpointSet := network.IsEndpointSet()
@@ -94,7 +72,6 @@ func FinalizeReq(reqDone Request) {
 			return
 		}
 		if !isEndpointSet {
-			//addRequestToHistory(reqDone)
 			discovery.AddRequestToHistory(reqDone.ID, reqDone.Start)
 
 		}
@@ -111,7 +88,6 @@ func FinalizeReq(reqDone Request) {
 				return
 			}
 			if !isEndpointSet {
-				//addRequestToHistory(reqDone)
 				discovery.AddRequestToHistory(reqDone.ID, reqDone.Start)
 			}
 		} else {

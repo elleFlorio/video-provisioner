@@ -92,7 +92,6 @@ func SendMessageToSpecificService(requestID string, service string) error {
 		log.Println("Cannot dispatch message to service ", service)
 		return err
 	}
-	//instance := getInstance(instances)
 	instance := lb.GetNodeRoundRobin(instances)
 	sendReqToDest(requestID, instance)
 	return nil
@@ -108,7 +107,6 @@ func SendMessageToDestination(requestID string) error {
 		log.Println("Cannot dispatch message to service ", destination)
 		return errors.New("Cannot dispatch message to service " + destination)
 	}
-	//instance := getInstance(instances)
 	instance := lb.GetNodeRoundRobin(instances)
 	sendReqToDest(requestID, instance)
 

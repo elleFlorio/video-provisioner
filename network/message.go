@@ -78,6 +78,5 @@ func ReadParam(name string, r *http.Request) (string, error) {
 	if param, ok := r.URL.Query()[name]; ok {
 		return param[0], nil
 	}
-	//log.Println(ErrNoSuchParam)
 	return "", ErrNoSuchParam
 }

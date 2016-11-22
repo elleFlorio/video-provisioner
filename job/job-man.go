@@ -59,11 +59,6 @@ func ManageJobs(ch_req chan request.Request) {
 			request.FinalizeReq(reqDone)
 			removeReqFromWorks(reqDone.ID)
 			metric.SendExecutionTime(reqDone.ExecTimeMs)
-			// case reqDone := <-ch_done:
-			// 	logger.LogExecutionTime(reqDone.ExecTimeMs)
-			// 	request.FinalizeReq(reqDone)
-			// 	removeReqFromWorks(reqDone.ID)
-			// 	metric.SendExecutionTime(reqDone.ExecTimeMs)
 		}
 	}
 }
